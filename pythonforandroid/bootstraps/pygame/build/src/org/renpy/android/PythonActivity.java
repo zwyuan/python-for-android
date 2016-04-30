@@ -333,9 +333,12 @@ public class PythonActivity extends Activity implements Runnable {
     }
 
     protected void onDestroy() {
-        mPurchaseDatabase.close();
-        mBillingService.unbind();
-
+        if (mPurchaseDatabase != null) {
+            mPurchaseDatabase.close();
+        }
+        if (mBillingService != null) {
+            mBillingService.unbind();
+        }
         if (mView != null) {
             mView.onDestroy();
         }
