@@ -600,7 +600,7 @@ build_dist
 
         info_main('# Copying APK to current directory')
 
-        apk_re = re.compile(r'.*Package: (.*\.apk)$')
+        apk_re = re.compile(r'.*Please sign (/.*\.apk) manually$')
         apk_file = None
         for line in reversed(output.splitlines()):
             m = apk_re.match(line)
