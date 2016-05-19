@@ -6,7 +6,7 @@ import glob
 
 class MobileInsightRecipe(Recipe):
 
-    mi_git            = 'https://wing1.cs.ucla.edu/gitlab/root/automator.git'
+    mi_git            = 'git@wing1.cs.ucla.edu:root/automator.git'
     mi_branch         = 'master'
     version           = '2.3'
     toolchain_version = 4.8          # default GCC toolchain version we try to use
