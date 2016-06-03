@@ -8,7 +8,7 @@ class MobileInsightRecipe(Recipe):
 
     mi_git            = 'git@wing1.cs.ucla.edu:root/automator.git'
     mi_branch         = 'master'
-    version           = '2.3'
+    version           = '2.4'
     toolchain_version = 4.8          # default GCC toolchain version we try to use
     depends           = ['python2']  # any other recipe names that must be built before this one
 
@@ -103,12 +103,13 @@ class MobileInsightRecipe(Recipe):
                 tmp_dir,
                 _tail     = 20,
                 _critical = True)
-        
+
         shprint(sh.mv,
                 join(tmp_dir, 'mobile_insight'),
                 build_dir,
                 _tail     = 20,
                 _critical = True)
+
         shprint(sh.mv,
                 join(tmp_dir, 'dm_collector_c'),
                 build_dir,
@@ -138,7 +139,6 @@ class MobileInsightRecipe(Recipe):
         #         join(build_dir, 'mobile_insight/monitor/__init__.py'),
         #         _tail     = 20,
         #         _critical = True)
-
         # shprint(sh.grep, '-v', '"### P4A.*"',
         #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py'),
         #         '>',
@@ -150,7 +150,6 @@ class MobileInsightRecipe(Recipe):
         #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py'),
         #         _tail     = 20,
         #         _critical = True)
-        
         # shprint(sh.grep, '-v', '"### P4A.*"',
         #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py'),
         #         '>',
@@ -162,7 +161,6 @@ class MobileInsightRecipe(Recipe):
         #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py'),
         #         _tail     = 20,
         #         _critical = True)
-
         # shprint(sh.rm,
         #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_collector.py'),
         #         _tail     = 20,
