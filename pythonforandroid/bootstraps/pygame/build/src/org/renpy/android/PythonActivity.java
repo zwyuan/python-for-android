@@ -285,6 +285,7 @@ public class PythonActivity extends Activity implements Runnable {
 
     @Override
     protected void onPause() {
+
         _isPaused = true;
         super.onPause();
 

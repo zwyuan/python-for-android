@@ -67,7 +67,7 @@ class MobileInsightRecipe(Recipe):
             toolchain_version   = self.toolchain_version,
             arch                = arch)
         env['LDFLAGS'] += ' -shared'
-        env['LDFLAGS'] += ' -lgnustl_shared'
+        env['LDFLAGS'] += ' -lgnustl_shared -llog'
         env['STRIP']    = str.split(env['STRIP'])[0]
 
         # warning("I am printing the env now")

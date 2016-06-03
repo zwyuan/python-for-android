@@ -21,6 +21,14 @@
 			   android:hardwareAccelerated="true"
                >
 
+  <receiver 
+    android:name="org.renpy.android.MyBroadcastReceiver" 
+    android:enabled="true" >
+    <intent-filter>
+      <action android:name="android.intent.action.BOOT_COMPLETED" />
+    </intent-filter>
+  </receiver>
+
 	{% for m in args.meta_data %}
 	<meta-data android:name="{{ m.split('=', 1)[0] }}" android:value="{{ m.split('=', 1)[-1] }}"/>{% endfor %}
     <meta-data android:name="fullscreen" android:value="{% if args.window %}0{% else %}1{% endif %}"/>
@@ -93,6 +101,7 @@
 		</intent-filter>
 	</receiver>
 	{% endif %}
+
 
   </application>
 
