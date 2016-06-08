@@ -22,3 +22,6 @@ dist/
 
 #idea/pycharm
 .idea/
+
+#Mac trash
+*.DS_Store
