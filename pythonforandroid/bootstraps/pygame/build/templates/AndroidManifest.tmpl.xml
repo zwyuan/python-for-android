@@ -22,7 +22,7 @@
                >
 
   <receiver 
-    android:name="org.renpy.android.MyBroadcastReceiver" 
+    android:name="org.renpy.android.MobileInsightBroadcastReceiver" 
     android:enabled="true" >
     <intent-filter>
       <action android:name="android.intent.action.BOOT_COMPLETED" />
