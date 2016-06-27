@@ -1,0 +1,29 @@
+2016-06-27: Sync with upstream, version num == 0.4
+
+2016-06-27: Guide to sync with upstream:
+
+# ONLY DO IT AT THE FIRST TIME
+git remote add upstream https://github.com/kivy/python-for-android.git
+
+# Fetch all the branches of that remote into remote-tracking branches,
+# such as upstream/master:
+# git fetch upstream
+git fetch upstream/master
+
+# Make sure that you're on your master branch:
+git checkout master
+
+# Rewrite your master branch so that any commits of yours that
+# aren't already in upstream/master are replayed on top of that
+# other branch:
+# ONLY DO IT AT THE FIRST TIME
+git rebase upstream/master
+
+# Otherwise, merge with the upstream
+git merge upstream/master
+
+# ONLY DO IT AT THE FIRST TIME
+git push -f origin master
+
+# Otherwise, just push
+git push origin master
