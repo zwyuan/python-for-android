@@ -104,6 +104,15 @@ class MobileInsightRecipe(Recipe):
                 _tail     = 20,
                 _critical = True)
 
+        # to use local debug feature, uncomment lines 108--114 and comment lines 97--105
+        # warning("debug using local sources of MobileInsight at {}".format('your_mobile_insight_desktop_src'))
+        # shprint(sh.cp,
+        #         '-r',
+        #         'your_mobile_insight_desktop_src',
+        #         tmp_dir,
+        #         _tail     = 20,
+        #         _critical = True)
+
         shprint(sh.mv,
                 join(tmp_dir, 'mobile_insight'),
                 build_dir,
@@ -123,7 +132,7 @@ class MobileInsightRecipe(Recipe):
 
         self.get_newest_toolchain(arch)
 
-        warning("MI2 -- Should also clean and remove unnecessary codes, skipping now.")
+        warning("MobileInsight -- Should also clean and remove unnecessary codes, skipping now.")
         # remove unnecessary code
         # sed -i '' is using Mac OS X sed syntax
         # TODO
@@ -188,7 +197,7 @@ class MobileInsightRecipe(Recipe):
 
             build_lib = glob.glob('./build/lib*')
             assert len(build_lib) == 1
-            warning('MI2 -- stripping mobileinsight')
+            warning('MobileInsight -- stripping mobileinsight')
 
             # shprint(sh.find, build_lib[0], '-name', '*.o', '-exec', env['STRIP'], '{}', ';', _tail = 20, _critical = True)
             shprint(sh.find, build_lib[0], '-name', '*.so', '-exec', env['STRIP'], '{}', ';', _tail = 20, _critical = True)
