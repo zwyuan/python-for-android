@@ -96,10 +96,10 @@ class MobileInsightRecipe(Recipe):
         except:
             pass
 
-        if local_debug is True:
-            warning("debug using local sources of MobileInsight at {}".format(mi_local_src))
+        if self.local_debug is True:
+            warning("debug using local sources of MobileInsight at {}".format(self.mi_local_src))
             shprint(sh.cp, '-r',
-                    mi_local_src,
+                    self.mi_local_src,
                     tmp_dir,
                     _tail     = 20,
                     _critical = True)
