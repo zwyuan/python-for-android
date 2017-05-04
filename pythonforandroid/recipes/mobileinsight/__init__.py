@@ -6,11 +6,11 @@ import glob
 
 class MobileInsightRecipe(Recipe):
     # change line 9 and 10 before installing!
-    local_debug       = False
+    local_debug       = False        # build an apk using local mobileInsight-desktop source
     mi_local_src      = '/Users/Dale/Workspace/mobileInsight/mobileInsight-desktop'
     mi_git            = 'git@wing1.cs.ucla.edu:root/mobileInsight-desktop.git'
-    mi_branch         = 'master'
-    version           = '2.4'
+    mi_branch         = 'master'     # change the branch to use
+    version           = '2.4.1'
     toolchain_version = 4.8          # default GCC toolchain version we try to use
     depends           = ['python2']  # any other recipe names that must be built before this one
 
@@ -98,6 +98,10 @@ class MobileInsightRecipe(Recipe):
 
         if self.local_debug is True:
             warning("debug using local sources of MobileInsight at {}".format(self.mi_local_src))
+            shprint(sh.mkdir, '-p',
+                    tmp_dir,
+                    _tail     = 20,
+                    _critical = True)
             shprint(sh.cp, '-r',
                     self.mi_local_src,
                     tmp_dir,
