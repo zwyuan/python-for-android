@@ -99,7 +99,7 @@ class MobileInsightRecipe(Recipe):
         if self.local_debug is True:
             warning("debug using local sources of MobileInsight at {}".format(self.mi_local_src))
             shprint(sh.mkdir, '-p',
-                    tmp_dir,
+                    build_dir,
                     _tail     = 20,
                     _critical = True)
             shprint(sh.cp, '-r',
