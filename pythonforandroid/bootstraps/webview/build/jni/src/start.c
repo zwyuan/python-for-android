@@ -283,6 +283,7 @@ JNIEXPORT void JNICALL Java_org_kivy_android_PythonService_nativeStart(
     jstring j_android_argument, jstring j_service_entrypoint,
     jstring j_python_name, jstring j_python_home, jstring j_python_path,
     jstring j_arg) {
+
   jboolean iscopy;
   const char *android_private =
       (*env)->GetStringUTFChars(env, j_android_private, &iscopy);

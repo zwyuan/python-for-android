@@ -9,11 +9,13 @@ import android.util.Log;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.os.Process;
+import java.lang.InterruptedException;
 
 public class PythonService extends Service  implements Runnable {
 
     // Thread for Python code
     private Thread pythonThread = null;
+
 
     // Python environment variables
     private String androidPrivate;
@@ -37,8 +39,12 @@ public class PythonService extends Service  implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (pythonThread != null) {
-            Log.v("python service", "service exists, do not start again");
-            return START_NOT_STICKY;
+            // Log.v("python service", "service exists, do not start again");
+            // return START_NOT_STICKY;
+            Log.v("python service", "Stopping the old service");
+            pythonThread = null;
+            Process.killProcess(Process.myPid());
+            // Log.v("python service", "Process.killProcess(Process.myPid());"); 
         }
 
         Bundle extras = intent.getExtras();
@@ -70,8 +76,10 @@ public class PythonService extends Service  implements Runnable {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.v("python service", "service stopped");
         pythonThread = null;
         Process.killProcess(Process.myPid());
+        // Log.v("python service", "Process.killProcess(Process.myPid());"); 
     }
 
     @Override
@@ -106,6 +114,8 @@ public class PythonService extends Service  implements Runnable {
         nativeInitJavaEnv();
         nativeStart(androidPrivate, androidArgument, pythonHome, pythonPath,
                 pythonServiceArgument);
+
+        
     }
 
     // Native part

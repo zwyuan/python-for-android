@@ -808,16 +808,16 @@ public class SDLSurfaceView extends SurfaceView implements SurfaceHolder.Callbac
         GLES20.glViewport(0, 0, mWidth, mHeight);
 
         if (bitmap != null) {
-            // float mx = ((float)mWidth / bitmap.getWidth()) / 2.0f;
-            // float my = ((float)mHeight / bitmap.getHeight()) / 2.0f;
-            float mx, my;
-            if (bitmap.getWidth() < bitmap.getHeight()) {
-            	mx = 0.5f;
-            	my = (float)bitmap.getHeight() / bitmap.getWidth() / 2.0f;
-            } else {
-            	mx = (float)bitmap.getWidth() / bitmap.getHeight() / 2.0f;
-            	my = 0.5f;
-            }
+            float mx = ((float)mWidth / bitmap.getWidth()) / 2.0f;
+            float my = ((float)mHeight / bitmap.getHeight()) / 2.0f;
+            // float mx, my;
+            // if (bitmap.getWidth() < bitmap.getHeight()) {
+            // 	mx = 0.5f;
+            // 	my = (float)bitmap.getHeight() / bitmap.getWidth() / 2.0f;
+            // } else {
+            // 	mx = (float)bitmap.getWidth() / bitmap.getHeight() / 2.0f;
+            // 	my = 0.5f;
+            // }
             Matrix.orthoM(mProjMatrix, 0, -mx, mx, my, -my, 0, 10);
             int value = bitmap.getPixel(0, 0);
             Color color = new Color();

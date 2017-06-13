@@ -5,12 +5,11 @@ import sh
 import glob
 
 class MobileInsightRecipe(Recipe):
-    # change line 9 and 10 before installing!
-    local_debug       = False        # build an apk using local mobileInsight-desktop source
-    mi_local_src      = '/Users/Dale/Workspace/mobileInsight/mobileInsight-desktop'
+
     mi_git            = 'git@wing1.cs.ucla.edu:root/mobileInsight-desktop.git'
-    mi_branch         = 'master'     # change the branch to use
-    version           = '2.4.1'
+    # mi_branch         = 'master'
+    mi_branch		= 'dev-2.2.0'
+    version           = '2.4'
     toolchain_version = 4.8          # default GCC toolchain version we try to use
     depends           = ['python2']  # any other recipe names that must be built before this one
 
@@ -87,7 +86,7 @@ class MobileInsightRecipe(Recipe):
 
         build_dir = self.get_build_dir(arch.arch)
         tmp_dir = join(build_dir, 'mi_tmp')
-        info("clean old MobileInsight sources at {}".format(build_dir))
+        info("clean old MI2 sources at {}".format(build_dir))
         try:
             shprint(sh.rm, '-r',
                     build_dir,
@@ -96,27 +95,33 @@ class MobileInsightRecipe(Recipe):
         except:
             pass
 
-        if self.local_debug is True:
-            warning("debug using local sources of MobileInsight at {}".format(self.mi_local_src))
-            shprint(sh.mkdir, '-p',
-                    build_dir,
-                    _tail     = 20,
-                    _critical = True)
-            shprint(sh.cp, '-r',
-                    self.mi_local_src,
-                    tmp_dir,
-                    _tail     = 20,
-                    _critical = True)
-        else:
-            info("clone MobileInsight sources from {}".format(self.mi_git))
-            shprint(sh.git,
-                    'clone', '-b',
-                    self.mi_branch,
-                    '--depth=1',
-                    self.mi_git,
-                    tmp_dir,
-                    _tail     = 20,
-                    _critical = True)
+        # info("clone MobileInsight sources from {}".format(self.mi_git))
+        # shprint(sh.git,
+        #         'clone', '-b',
+        #         self.mi_branch,
+        #         '--depth=1',
+        #         self.mi_git,
+        #         tmp_dir,
+        #         _tail     = 20,
+        #         _critical = True)
+
+        # to use local debug feature, uncomment lines 108--114 and comment lines 97--105
+        warning("debug using local sources of MobileInsight at {}".format('/Users/yuanjieli/Desktop/MobileInsight/desktop-version'))
+        shprint(sh.mkdir,
+                build_dir,
+                _tail     = 20,
+                _critical = True)
+        shprint(sh.mkdir,
+                tmp_dir,
+                _tail     = 20,
+                _critical = True)
+        shprint(sh.cp,
+                '-fr',
+                '/Users/yuanjieli/Desktop/MobileInsight/desktop-version',
+                tmp_dir,
+                _tail     = 20,
+                _critical = True)
+        tmp_dir = join(tmp_dir, 'desktop-version')
 
         shprint(sh.mv,
                 join(tmp_dir, 'mobile_insight'),

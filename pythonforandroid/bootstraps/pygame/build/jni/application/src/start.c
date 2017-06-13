@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <unistd.h>
 #include <jni.h>
 #include "SDL.h"
@@ -123,18 +124,27 @@ int main(int argc, char **argv) {
 
     /* run python !
      */
+    LOG("python: Before PyRun_SimpleFile");
     ret = PyRun_SimpleFile(fd, main_py);
+    // ret = PyRun_SimpleFileExFlags(fd, main_py, 1, NULL);
+    LOG("python: After PyRun_SimpleFile");
 
+    LOG("python: Before PyErr_Occurred");
     if (PyErr_Occurred() != NULL) {
         ret = 1;
+        LOG("python: Before PyErr_Print");
         PyErr_Print(); /* This exits with the right code if SystemExit. */
+        LOG("python: After PyErr_Print");
         if (Py_FlushLine())
 			PyErr_Clear();
+        LOG("python: After PyErr_Clear");
     }
+    LOG("python: After PyErr_Occurred");
 
     /* close everything
      */
-	Py_Finalize();
+	  Py_Finalize();
+    LOG("python: After Py_Finalize");
     fclose(fd);
 
     LOG("Python for android ended.");
@@ -148,6 +158,7 @@ JNIEXPORT void JNICALL JAVA_EXPORT_NAME(PythonService_nativeStart) ( JNIEnv*  en
                                                                      jstring j_python_path,
                                                                      jstring j_arg )
 {
+
     jboolean iscopy;
     const char *android_private = (*env)->GetStringUTFChars(env, j_android_private, &iscopy);
     const char *android_argument = (*env)->GetStringUTFChars(env, j_android_argument, &iscopy);
@@ -167,6 +178,12 @@ JNIEXPORT void JNICALL JAVA_EXPORT_NAME(PythonService_nativeStart) ( JNIEnv*  en
      * so main() will run main.py from this dir
      */
     main(1, argv);
+}
+
+JNIEXPORT void JNICALL JAVA_EXPORT_NAME(PythonService_nativeStop) ()
+{
+    LOG("Yuanjie: python PythonService_nativeStop");
+    
 }
 
 #endif
