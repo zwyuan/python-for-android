@@ -89,7 +89,7 @@ class MobileInsightRecipe(Recipe):
         except:
             pass
 
-        if LOCAL_DEBUG = False:
+        if LOCAL_DEBUG is False:
             info("Cloning MobileInsight-core sources from {}".format(self.mi_git))
             shprint(sh.git,
                     'clone', '-b',
