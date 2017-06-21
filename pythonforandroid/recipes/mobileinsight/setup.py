@@ -19,7 +19,7 @@ dm_collector_c_module = Extension('mobile_insight.monitor.dm_collector.dm_collec
                                 )
 setup(
     name = 'MobileInsight',
-    version = '1.1',
+    version = '3.0',
     description = 'Mobile network monitoring and analysis',
     author = 'Yuanjie Li, Zengwen Yuan, Jiayao Li',
     author_email = 'yuanjie.li@cs.ucla.edu, zyuan@cs.ucla.edu, likayo@ucla.edu',

@@ -4,13 +4,15 @@ from os.path import exists, join, isdir, split
 import sh
 import glob
 
+LOCAL_DEBUG = False
+
 class MobileInsightRecipe(Recipe):
 
-    mi_git            = 'git@wing1.cs.ucla.edu:root/mobileInsight-desktop.git'
-    # mi_branch         = 'master'
-    mi_branch		= 'dev-2.2.0'
-    version           = '2.4'
-    toolchain_version = 4.8          # default GCC toolchain version we try to use
+    mi_git            = 'https://github.com/uclawing/mobileInsight-core.git'
+    mi_branch		  = 'dev-2.2.0'
+    local_src         = '/home/vagrant/mi-dev/MobileInsight-core'
+    version           = '2.5'
+    toolchain_version = 4.9          # default GCC toolchain version we try to use
     depends           = ['python2']  # any other recipe names that must be built before this one
 
     def get_newest_toolchain(self, arch):
@@ -55,14 +57,6 @@ class MobileInsightRecipe(Recipe):
             ndk_dir             = self.ctx.ndk_dir,
             toolchain_version   = self.toolchain_version,
             arch                = arch)
-        # env['CXXFLAGS'] += ' -Os -fPIC -fvisibility=default'
-        # env['CXXFLAGS'] += ' -I{ndk_dir}/sources/cxx-stl/gnu-libstdc++/{toolchain_version}/include'.format(
-        #     ndk_dir             = self.ctx.ndk_dir,
-        #     toolchain_version   = self.toolchain_version)
-        # env['CXXFLAGS'] += ' -I{ndk_dir}/sources/cxx-stl/gnu-libstdc++/{toolchain_version}/libs/{arch}/include'.format(
-        #     ndk_dir             = self.ctx.ndk_dir,
-        #     toolchain_version   = self.toolchain_version,
-        #     arch                = arch)
         env['LDFLAGS'] += ' -L{ndk_dir}/sources/cxx-stl/gnu-libstdc++/{toolchain_version}/libs/{arch}'.format(
             ndk_dir             = self.ctx.ndk_dir,
             toolchain_version   = self.toolchain_version,
@@ -71,13 +65,13 @@ class MobileInsightRecipe(Recipe):
         env['LDFLAGS'] += ' -lgnustl_shared -llog'
         env['STRIP']    = str.split(env['STRIP'])[0]
 
-        # warning("I am printing the env now")
+        # warning("Testing the env")
         # shprint(sh.echo, '$PATH', _env=env)
-        # warning("I am printing self.ctx.ndk-dir = {}".format(self.ctx.ndk_dir))
-        # warning("I am printing self.ctx.build_dir = {}".format(self.ctx.build_dir))
-        # warning("I am printing self.ctx.libs_dir = {}".format(self.ctx.libs_dir))
-        # warning("I am printing self.ctx.bootstrap.build_dir = {}".format(self.ctx.bootstrap.build_dir))
-        # warning("I am printing self.ctx = {}".format(str(self.ctx)))
+        # warning("self.ctx = {}".format(str(self.ctx)))
+        # warning("self.ctx.ndk-dir = {}".format(self.ctx.ndk_dir))
+        # warning("self.ctx.build_dir = {}".format(self.ctx.build_dir))
+        # warning("self.ctx.libs_dir = {}".format(self.ctx.libs_dir))
+        # warning("self.ctx.bootstrap.build_dir = {}".format(self.ctx.bootstrap.build_dir))
         return env
 
 
@@ -86,7 +80,7 @@ class MobileInsightRecipe(Recipe):
 
         build_dir = self.get_build_dir(arch.arch)
         tmp_dir = join(build_dir, 'mi_tmp')
-        info("clean old MI2 sources at {}".format(build_dir))
+        info("Cleaning old MobileInsight-core sources at {}".format(build_dir))
         try:
             shprint(sh.rm, '-r',
                     build_dir,
@@ -95,33 +89,33 @@ class MobileInsightRecipe(Recipe):
         except:
             pass
 
-        # info("clone MobileInsight sources from {}".format(self.mi_git))
-        # shprint(sh.git,
-        #         'clone', '-b',
-        #         self.mi_branch,
-        #         '--depth=1',
-        #         self.mi_git,
-        #         tmp_dir,
-        #         _tail     = 20,
-        #         _critical = True)
-
-        # to use local debug feature, uncomment lines 108--114 and comment lines 97--105
-        warning("debug using local sources of MobileInsight at {}".format('/Users/yuanjieli/Desktop/MobileInsight/desktop-version'))
-        shprint(sh.mkdir,
-                build_dir,
-                _tail     = 20,
-                _critical = True)
-        shprint(sh.mkdir,
-                tmp_dir,
-                _tail     = 20,
-                _critical = True)
-        shprint(sh.cp,
-                '-fr',
-                '/Users/yuanjieli/Desktop/MobileInsight/desktop-version',
-                tmp_dir,
-                _tail     = 20,
-                _critical = True)
-        tmp_dir = join(tmp_dir, 'desktop-version')
+        if LOCAL_DEBUG = False:
+            info("Cloning MobileInsight-core sources from {}".format(self.mi_git))
+            shprint(sh.git,
+                    'clone', '-b',
+                    self.mi_branch,
+                    '--depth=1',
+                    self.mi_git,
+                    tmp_dir,
+                    _tail     = 20,
+                    _critical = True)
+        else:
+            warning("Debugging using local sources of MobileInsight at {}".format(self.local_src))
+            shprint(sh.mkdir,
+                    build_dir,
+                    _tail     = 20,
+                    _critical = True)
+            shprint(sh.mkdir,
+                    tmp_dir,
+                    _tail     = 20,
+                    _critical = True)
+            shprint(sh.cp,
+                    '-fr',
+                    self.local_src,
+                    tmp_dir,
+                    _tail     = 20,
+                    _critical = True)
+            tmp_dir = join(tmp_dir, 'MobileInsight-core')
 
         shprint(sh.mv,
                 join(tmp_dir, 'mobile_insight'),
@@ -141,49 +135,6 @@ class MobileInsightRecipe(Recipe):
                 _critical = True)
 
         self.get_newest_toolchain(arch)
-
-        warning("MobileInsight -- Should also clean and remove unnecessary codes, skipping now.")
-        # remove unnecessary code
-        # sed -i '' is using Mac OS X sed syntax
-        # TODO
-        # sed -i'' is using GNU version sed syntax
-        # shprint(sh.grep, '-v', '"### P4A.*"',
-        #         join(build_dir, 'mobile_insight/monitor/__init__.py'),
-        #         '>',
-        #         join(build_dir, 'mobile_insight/monitor/__init__.py.bak'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.mv,
-        #         join(build_dir, 'mobile_insight/monitor/__init__.py.bak'),
-        #         join(build_dir, 'mobile_insight/monitor/__init__.py'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.grep, '-v', '"### P4A.*"',
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py'),
-        #         '>',
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py.bak'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.mv,
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py.bak'),
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/__init__.py'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.grep, '-v', '"### P4A.*"',
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py'),
-        #         '>',
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py.bak'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.mv,
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py.bak'),
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_endec/ws_dissector.py'),
-        #         _tail     = 20,
-        #         _critical = True)
-        # shprint(sh.rm,
-        #         join(build_dir, 'mobile_insight/monitor/dm_collector/dm_collector.py'),
-        #         _tail     = 20,
-        #         _critical = True)
 
 
     def build_arch(self, arch):
@@ -209,11 +160,10 @@ class MobileInsightRecipe(Recipe):
             assert len(build_lib) == 1
             warning('MobileInsight -- stripping mobileinsight')
 
-            # shprint(sh.find, build_lib[0], '-name', '*.o', '-exec', env['STRIP'], '{}', ';', _tail = 20, _critical = True)
             shprint(sh.find, build_lib[0], '-name', '*.so', '-exec', env['STRIP'], '{}', ';', _tail = 20, _critical = True)
 
         try:
-            warning('copying GNU STL shared lib to {libs_dir}/{arch}'.format(
+            warning('Copying GNU STL shared lib to {libs_dir}/{arch}'.format(
                     libs_dir          = self.ctx.libs_dir,
                     arch              = arch))
             shprint(sh.cp,
@@ -225,7 +175,7 @@ class MobileInsightRecipe(Recipe):
                     libs_dir          = self.ctx.libs_dir,
                     arch              = arch))
         except:
-            warning('failed to copy GNU STL shared lib!!')
+            warning('Failed to copy GNU STL shared lib!')
 
     def build_cython_components(self, arch):
         env = self.get_recipe_env(arch)
@@ -263,7 +213,7 @@ class MobileInsightRecipe(Recipe):
         super(MobileInsightRecipe, self).postbuild_arch(arch)
 
         # TODO
-        warning('Should remove mobileinsight build tools etc. here, but skipping for now')
+        warning('Should remove mobileinsight build tools here, skipping for now')
         #     try rm -rf $BUILD_PATH/python-install/lib/python*/site-packages/mobile_insight/tools
 
 recipe = MobileInsightRecipe()
